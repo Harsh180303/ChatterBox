@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const DbConnect = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URL, {
-      dbName: "ChatterBox",
+      dbName: "chatterbox",
       retryWrites: true,
       serverSelectionTimeoutMS: 5000,
     })

@@ -14,12 +14,13 @@ const userSchema = new Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        match: [/.+\@.+\..+/, "Please enter a valid email"],
+        match: [/^[\w.-]+@([\w-]+\.)+[\w-]{2,4}$/, "Please enter a valid email"],
     },
     userName: {
         type: String,
         required: true,
         unique: true,
+        match: [/^[a-zA-Z0-9_.]+$/, "Invalid username format"],
         minLength: [3, "Username should be at least 3 characters long"],
         maxLength: [20, "Username should not exceed 20 characters"]
     },
@@ -34,6 +35,7 @@ const userSchema = new Schema({
         select: false  // Don't return password by default in queries
     },
 }, {
+    // strict: 'throw',
     timestamps: true,
 })
 

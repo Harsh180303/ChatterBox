@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import DbConnect from './config/dbConfig.js'
 import authRoute from './routes/authRoute.js'
+import errorMiddleware from './middlewares/errorMiddleware.js'
 
 await DbConnect()
 const app = express()
@@ -18,11 +19,7 @@ app.get('/', (req, res) => {
 
 // error middleware must be at the end
 
-// app.use((error, req, res, next) => {
-//   return res
-//     .status(500)
-//     .json({ success: false, message: 'Something went wrong' })
-// })
+app.use(errorMiddleware)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`)
