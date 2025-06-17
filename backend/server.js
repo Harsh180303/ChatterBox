@@ -4,12 +4,22 @@ import 'dotenv/config'
 import DbConnect from './config/dbConfig.js'
 import authRoute from './routes/authRoute.js'
 import errorMiddleware from './middlewares/errorMiddleware.js'
+import cookieParser from 'cookie-parser'
 
 await DbConnect()
 const app = express()
 
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:5173',
+  'Enter Your Frontend URL here'
+]
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api/auth', authRoute)
 

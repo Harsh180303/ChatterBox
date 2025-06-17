@@ -1,0 +1,7 @@
+# Ignore backend node_modules
+backend/node_modules/
+backend/.env
+
+# Future: Ignore frontend node_modules too
+frontend/node_modules/
+frontend/.env

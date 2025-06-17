@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@keyframes softGlow {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.animate-softGlow {
+  animation: softGlow 6s ease-in-out infinite;
+}
+
+@layer utilities {
+  .text-shadow-bottom {
+    text-shadow: 0 4px 3px rgba(252, 160, 64, 0.3);
+  }
+}
+
+
+.focus-outline:focus-within {
+  outline: auto;
+}

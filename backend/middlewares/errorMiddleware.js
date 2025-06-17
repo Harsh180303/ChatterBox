@@ -1,5 +1,5 @@
 const errorMiddleware = async (err, req, res, next) => {
-    console.error('Error Caught ', err.stack)
+    console.error('Error Caught ', err)
 
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode
 
