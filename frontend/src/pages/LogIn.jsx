@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from "../../public/logo.png"
+import logo from '../assets/logo.png'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -9,10 +9,19 @@ function LogIn() {
     const [identifier, setIdentifier] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
     const loginHandler = async (e) => {
       e.preventDefault()
+      setError("")
       setLoading(true)
+
+      if(!identifier || !password) {
+        setError("Please fill required fields")
+        setLoading(false)
+        return
+      }
+      
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`,
           {
@@ -24,9 +33,11 @@ function LogIn() {
         console.log(response)
         setIdentifier('')
         setPassword('')
-        setLoading(false)
+
+        // Redirect to Homepage
       } catch (error) {
-        console.log(error)
+        setError(error?.response?.data?.message || 'Login failed!')
+      } finally {
         setLoading(false)
       }
     }
@@ -63,6 +74,7 @@ function LogIn() {
     
               <div className="border w-[70%] rounded-sm text-white bg-[#2c2125]/80 flex items-center">
                 <input
+                  minLength={6}
                   onChange={(e) => {setPassword(e.target.value)}}
                   value={password}
                   type={show ? "text" : "password"}
@@ -76,8 +88,10 @@ function LogIn() {
                   {show ? "hide" : "show"}
                 </span>
               </div>
+
+              {error && <p className="text-red-500 font-medium text-sm">{error}</p>}
     
-              <button type='submit' className="border px-4 py-3 bg-[#CA4F00] text-white rounded-md border-none w-[45%] mt-3 cursor-pointer text-lg font-semibold shadow-lg hover:shadow-inner">
+              <button disabled={loading} type='submit' className={`border px-4 py-3 bg-[#CA4F00] text-white rounded-md border-none w-[45%] mt-2 cursor-pointer text-lg font-semibold shadow-lg hover:shadow-inner ${loading ? "cursor-not-allowed" : ""}`}>
                 {/* Login */}
                 {loading === true ? "Loading...": "Login"}
               </button>

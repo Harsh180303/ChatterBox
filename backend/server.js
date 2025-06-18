@@ -5,6 +5,8 @@ import DbConnect from './config/dbConfig.js'
 import authRoute from './routes/authRoute.js'
 import errorMiddleware from './middlewares/errorMiddleware.js'
 import cookieParser from 'cookie-parser'
+import isAuth from './middlewares/isAuth.js'
+import userRouter from './routes/userRoute.js'
 
 await DbConnect()
 const app = express()
@@ -22,6 +24,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/auth', authRoute)
+app.use('/api/user', isAuth, userRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello World')

@@ -1,19 +1,40 @@
 import React, { useState } from 'react'
-import logo from '../../public/logo.png'
+import logo from '../assets/logo.png'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUserData } from '../redux/userSlice'
 
 function SignUp() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  // const {} = useSelector((state) => )
   const [show, setshow] = useState(false)
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleSignUp = async (e) => {
     e.preventDefault()
+    setError('')
     setLoading(true)
+
+    // validation
+    if(!userName || !email || !password || !confirmPassword) {
+      setError('All fields are required')
+      setLoading(false)
+      return
+    }
+
+    if(password !== confirmPassword) {
+      setError('Password does not match!')
+      setLoading(false)
+      return
+    }
+    
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
@@ -24,13 +45,18 @@ function SignUp() {
         },
         { withCredentials: true }
       )
-      console.log(response)
+
+      dispatch(setUserData(response.data))
+      
+      setUserName('')
       setEmail('')
       setPassword('')
-      setUserName('')
-      setLoading(false)
+      setConfirmPassword('')
+      // Redirect to homepage
+
     } catch (error) {
-      console.log(error)
+      setError(error?.response?.data?.message || "Signup failed")
+    } finally {
       setLoading(false)
     }
   }
@@ -44,7 +70,7 @@ function SignUp() {
       ></div>
 
       {/* SignUp box */}
-      <div className="xl:w-[35%] 2xl:w-[32%] xl:h-[86%] 2xl:h-[75%] bg-[#553927]/50 backdrop-blur-lg border border-white/5 rounded-lg p-6 shadow-lg flex flex-col justify-center items-center gap-y-6">
+      <div className="xl:w-[35%] 2xl:w-[32%] xl:min-h-[86%] 2xl:h-[75%] bg-[#553927]/50 backdrop-blur-lg border border-white/5 rounded-lg p-6 shadow-lg flex flex-col justify-center items-center gap-y-6">
         <img
           src={logo}
           alt="logo"
@@ -88,6 +114,7 @@ function SignUp() {
               value={password}
               type={show ? 'text' : 'password'}
               placeholder="Password"
+              minLength={6}
               className="w-[80%] h-full outline-none px-4 py-3 cursor-pointer"
             />
             <span
@@ -98,9 +125,20 @@ function SignUp() {
             </span>
           </div>
 
+          <input 
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            type='password'
+            placeholder='Confirm Password'            
+            className="border w-[70%] rounded-sm px-4 py-3 text-white cursor-pointer bg-[#2c2125]/80"
+          />
+
+          {error && <p className="text-red-500 font-medium text-sm">{error}</p>}
+
           <button
+            disabled={loading}
             type="submit"
-            className="border px-4 py-3 bg-[#CA4F00] text-white rounded-md border-none w-[45%] mt-3 cursor-pointer text-lg font-semibold shadow-lg hover:shadow-inner"
+            className={`border px-4 py-3 bg-[#CA4F00] text-white rounded-md border-none w-[45%] mt-2 cursor-pointer text-lg font-semibold shadow-lg hover:shadow-inner ${loading ? "cursor-not-allowed" : ""}`}
           >
           {/* Sign Up */}
             {loading === true ? "Loading..." : "Sign Up"}
@@ -122,5 +160,3 @@ function SignUp() {
 }
 
 export default SignUp
-
-// button bg-[#CA4F00]

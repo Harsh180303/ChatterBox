@@ -146,3 +146,4 @@ export const logOut = async (req, res, next) => {
     })
   }
 }
+// select("-_id") bcoz response mai userid ja rhi hai jiska koi use h ni
