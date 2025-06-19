@@ -34,6 +34,15 @@ const userSchema = new Schema({
         minLength: [6, "Password must be at least 6 characters long"],
         select: false  // Don't return password by default in queries
     },
+    resetPasswordOTP: {
+        type: String,
+        default: null,
+        select: false,
+    },
+    resetPasswordExpire: {
+        type: Date,
+        default: null,
+    }
 }, {
     // strict: 'throw',
     timestamps: true,
@@ -41,7 +50,7 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next) {
     // in case of username update no need to hash password
-    if(!this.isModified('password')) return 
+    if(!this.isModified('password')) return next()
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
     next()
