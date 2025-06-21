@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // only for testing in mobile
+  server: {
+    host: '0.0.0.0', // 👈 Important part
+    port: 5173,       // Optional: custom port
+  },
 })
