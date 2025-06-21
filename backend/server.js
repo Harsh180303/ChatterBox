@@ -13,6 +13,7 @@ const app = express()
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://192.168.29.212:5173',
   'Enter Your Frontend URL here'
 ]
 
