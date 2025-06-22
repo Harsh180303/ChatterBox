@@ -7,9 +7,15 @@ import errorMiddleware from './middlewares/errorMiddleware.js'
 import cookieParser from 'cookie-parser'
 import isAuth from './middlewares/isAuth.js'
 import userRouter from './routes/userRoute.js'
+import fs, { existsSync } from 'fs'
 
 await DbConnect()
 const app = express()
+const uploadPath = './uploads'
+
+if(!existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath)
+}
 
 const allowedOrigins = [
   'http://localhost:5173',
