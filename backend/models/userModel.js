@@ -8,6 +8,12 @@ const userSchema = new Schema({
         minLength: [3, "Name should be at least 3 characters long"],
         trim: true,
     },
+    about: {
+        type: String,
+        maxLength: [30, "About should not exceed 30 characters"],
+        trim: true,
+        default: "Just getting started 💡",
+    },
     email: {
         type: String,
         required: true,

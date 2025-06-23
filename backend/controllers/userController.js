@@ -47,7 +47,7 @@ export const editProfile = async (req, res, next) => {
     if (image) updateData.image = image
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,
+      req.userId,
       updateData,
       { new: true }
     )
