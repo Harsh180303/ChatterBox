@@ -21,6 +21,7 @@ function Profile() {
   const [backendImage, setBackendImage] = useState(null)
   const [about, setAbout] = useState( userAbout || '')
   const [error, setError] = useState('')
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   
   const photo = useRef()
 
@@ -98,6 +99,7 @@ function Profile() {
                   draggable="false"
                   src={frontendImage}
                   className="w-full h-full object-cover "
+                  onClick={() => setIsPreviewOpen(true)}
                 />
               </div>
               <IoCamera className="absolute bottom-6 right-1 p-[2px] w-6 h-6 cursor-pointer rounded-full bg-white" onClick={(e) => photo?.current?.click()}/>
@@ -162,7 +164,20 @@ function Profile() {
               Save Profile
             </button>
           </form>
+
         </div>
+          {isPreviewOpen && (
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={() => setIsPreviewOpen(false)}
+            >
+              <img 
+                src={frontendImage}
+                alt='Preview'
+                className="w-[90%] max-w-[35rem] rounded-lg shadow-xl border-4 border-white"
+                onClick={(e) => e.stopPropagation()} // prevent closing when clicking image
+              />
+            </div>
+          )}
       </div>
     </>
   )
