@@ -67,3 +67,18 @@ export const editProfile = async (req, res, next) => {
     })
   }
 }
+
+export const getOtherUsers = async(req, res, next) => {
+    try {
+        let users = await User.find({
+            _id:{$ne: req.userId}
+        }).select("-password")
+    } catch (error) {
+        console.log(error)
+        next({
+            statusCode: 500,
+            message: 'Failed to get other users',
+            error: error.message
+        })
+    }
+}
