@@ -54,6 +54,9 @@ const userSchema = new Schema({
     timestamps: true,
 })
 
+// userSchema.index({ userName: 1})
+// userSchema.index({ email: 1 })
+
 userSchema.pre('save', async function (next) {
     // in case of username update no need to hash password
     if(!this.isModified('password')) return next()

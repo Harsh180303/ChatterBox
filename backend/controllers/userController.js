@@ -68,16 +68,42 @@ export const editProfile = async (req, res, next) => {
   }
 }
 
-export const getOtherUsers = async(req, res, next) => {
+export const searchUsers = async (req, res, next) => {
     try {
-        let users = await User.find({
-            _id:{$ne: req.userId}
-        }).select("-password")
+        const { userName } = req.query
+
+        if(!userName || userName.trim().length < 2) {
+            return res.status(400).json({
+                success: false,
+                message: 'Search query too short',
+            })
+        }
+
+        const users = await User.find({
+            userName: { $regex: userName, $options: 'i' },
+            _id: { $ne: req.userId }
+        })
+        .collation({ locale: 'en', strength: 2 })
+        .select("userName name image")
+
+        if(users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No user found',
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Users found successfully',
+            users,
+        })
+        
     } catch (error) {
         console.log(error)
         next({
             statusCode: 500,
-            message: 'Failed to get other users',
+            message: 'Failed to search users',
             error: error.message
         })
     }
