@@ -9,6 +9,7 @@ import useCurrentUser from './customHooks/useCurrentUser'
 import { useSelector } from 'react-redux'
 import Profile from './pages/Profile'
 import Home from './pages/Home'
+import SearchUsers from './pages/SearchUsers'
 
 function App() {
   useCurrentUser()
@@ -29,6 +30,7 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path='/' element={ userData ? <Home /> : <Navigate to="/login"/>} />
+      <Route path='/search-users' element={userData ? <SearchUsers /> : <Navigate to='/login' />}/>
       <Route path='/profile' element={ userData ? <Profile /> : <Navigate to="/signup"/>} />
     </Routes>
     </>
