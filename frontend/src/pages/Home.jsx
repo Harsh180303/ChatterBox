@@ -6,7 +6,9 @@ import ChatWindow from '../../components/ChatWindow'
 function Home() {
   return (
     <div className='flex h-screen w-screen text-white text-center'>
+    <div className='xl:w-[5%] 2xl:w-[4%] w-[4%]'>
       <SideBar/>
+    </div>
       <ChatList />
       <ChatWindow />
     </div>
