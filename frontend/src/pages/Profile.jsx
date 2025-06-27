@@ -171,6 +171,7 @@ function Profile() {
             onClick={() => setIsPreviewOpen(false)}
             >
               <img 
+                draggable="false"
                 src={frontendImage}
                 alt='Preview'
                 className="w-[90%] max-w-[35rem] rounded-lg shadow-xl border-4 border-white"

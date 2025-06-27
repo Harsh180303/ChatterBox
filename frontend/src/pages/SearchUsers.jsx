@@ -60,6 +60,7 @@ function SearchUsers() {
               >
                 <img 
                   src={user.image || dp}
+                  draggable="false"
                   alt='Profile pic'
                   className='h-10 w-10 rounded-full object-cover'
                 />
