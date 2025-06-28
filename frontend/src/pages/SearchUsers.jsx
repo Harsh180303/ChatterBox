@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import SideBar from '../../components/SideBar'
 import SearchBox from '../../components/SearchBox'
 import axios from 'axios'
@@ -8,7 +8,7 @@ function SearchUsers() {
   const [results, setResults] = useState([])
   const [error, setError] = useState(null)
 
-  const handleSearch = async (text) => {
+  const handleSearch = useCallback(async (text) => {
     console.log('Searching...', text)
 
     if(!text.trim()) {
@@ -29,15 +29,20 @@ function SearchUsers() {
     )
 
     console.log(response?.data?.users)
-    setResults(response?.data?.users)
-    setError(null)
+    if(response?.data?.users.length) {
+      setResults(response?.data?.users)
+      setError(null)
+    } else {
+      setResults([])
+      setError('No users found')
+    }
 
     } catch (error) {
       console.log(error)
       setResults([])
-      setError('No users found')
+      setError('Failed to search users')
     }
-  }
+  }, [])
   
   return (
     <div className="h-screen w-screen bg-[#2c2125] flex overflow-x-hidden text-white">

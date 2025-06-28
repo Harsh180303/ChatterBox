@@ -14,11 +14,13 @@ const SearchBox = ({
   const inputRef = useRef(null)
   const wrapperRef = useRef(null)
   const [value, setValue] = useState('')
-  const debouncedValue = useDebouncedInput(value, 400)
+  const debouncedValue = useDebouncedInput(value, 500)
 
 //   Trigger search whenever debouncedValue changes
     useEffect(() => {
-        if(debouncedValue !== "") onSearch(debouncedValue)
+        if(debouncedValue.trim().length >= 2) {
+          onSearch(debouncedValue.trim())
+        } 
     }, [debouncedValue, onSearch])
 
   // Focus input on show

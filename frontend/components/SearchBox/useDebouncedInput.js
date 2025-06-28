@@ -1,18 +1,17 @@
-import { useEffect } from "react"
-import debounce from 'lodash.debounce'
-import { useState } from "react"
+import { useEffect, useState } from 'react'
 
 const useDebouncedInput = (value, delay = 500) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
-    useEffect(() => {
-        const handler = debounce(() => setDebouncedValue(value), delay)
-        handler()
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
 
-        return () => handler.cancel()
-    }, [value, delay])
+    return () => clearTimeout(handler)
+  }, [value, delay])
 
-    return debouncedValue
+  return debouncedValue
 }
 
 export default useDebouncedInput
