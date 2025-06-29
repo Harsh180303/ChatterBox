@@ -80,12 +80,6 @@ const userSchema = new Schema(
         // message content kaha store hoga?
       },
     ],
-    archivedChats: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Chat',
-      },
-    ],
   },
   {
     // strict: 'throw',
