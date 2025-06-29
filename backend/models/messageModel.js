@@ -93,3 +93,18 @@ const messageSchema = new Schema(
   },
   { timestamps: true }
 )
+
+// 1. Get all messages in a chat (sorted by newest)
+messageSchema.index({ chat: 1, createdAt: -1 })
+
+// 2. For efficient reply threading
+messageSchema.index({ replyTo: 1 })
+
+// 3. For searching messages by sender (optional)
+messageSchema.index({ sender: 1 })
+
+// 4. For unread filtering (optional but useful)
+messageSchema.index({ chat: 1, isRead: 1 })
+
+// 5. For scheduled messages (optional, if you're using this feature)
+messageSchema.index({ scheduledFor: 1 })
