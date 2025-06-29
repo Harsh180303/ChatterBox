@@ -44,7 +44,7 @@ const SearchBox = ({
   return (
     <form
       ref={wrapperRef}
-      className="relative w-full flex items-center rounded-md gap-x-2 border border-[#2c2c2c] focus-within:shadow-[0_0_0_2px_#CA4F00] transition-all duration-300"
+      className="relative w-full flex items-center rounded-md gap-x-2 "
       onSubmit={(e) => e.preventDefault()}
     >
       <input
