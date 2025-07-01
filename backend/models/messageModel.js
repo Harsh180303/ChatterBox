@@ -13,8 +13,8 @@ const messageSchema = new Schema(
     },
     chat: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Chat', // chatModel
-      required: true,
+      ref: 'Chat',
+      // required: true,  
     },
     messageType: {
       type: String,
@@ -35,7 +35,7 @@ const messageSchema = new Schema(
     content: {
       type: String,
       required: function () {
-        return this.messageType === 'text'
+        return this.messageType === 'text' // need to understand
       },
     },
     media: {
@@ -108,3 +108,6 @@ messageSchema.index({ chat: 1, isRead: 1 })
 
 // 5. For scheduled messages (optional, if you're using this feature)
 messageSchema.index({ scheduledFor: 1 })
+
+const Message = mongoose.model('Message', messageSchema)
+export default Message

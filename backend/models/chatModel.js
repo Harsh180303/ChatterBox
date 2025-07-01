@@ -97,3 +97,6 @@ chatSchema.index({ isGroupChat: 1 })
 
 // To fetch all chats created by a user (admin feature)
 chatSchema.index({ createdBy: 1 })
+
+const Chat = mongoose.model('Chat', chatSchema)
+export default Chat

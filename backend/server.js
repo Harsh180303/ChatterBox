@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser'
 import isAuth from './middlewares/isAuth.js'
 import userRoute from './routes/userRoute.js'
 import fs, { existsSync } from 'fs'
+import messageRouter from './routes/messageRoute.js'
 
 await DbConnect()
 const app = express()
@@ -31,7 +32,8 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/auth', authRoute)
-app.use('/api/user', isAuth, userRoute)
+app.use('/api/user', userRoute)
+app.use('/api/message', messageRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello World')
