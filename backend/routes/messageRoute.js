@@ -5,6 +5,6 @@ import upload from '../middlewares/multer.js'
 
 const messageRouter = express.Router()
 
-messageRouter.post('/send', isAuth, upload.single('image'), sendMessage)
+messageRouter.post('/send/:receiverId', isAuth, upload.single('media'), sendMessage)
 
 export default messageRouter
