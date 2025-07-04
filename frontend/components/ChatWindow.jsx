@@ -41,6 +41,7 @@ function ChatWindow() {
   const dispatch = useDispatch()
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false)
   console.log(selectedChat)
+  const [message, setMessage] = useState('')
 
   const handleAttachmentToggle = async () => {
     setIsAttachmentOpen((prev) => !prev)
@@ -121,13 +122,19 @@ function ChatWindow() {
               </div>
 
               {/* INPUT BOX */}
-              <input
-                className="w-full outline-none rounded-md text-wrap overflow-y-scroll"
-                placeholder="Type a message"
-              />
+              <div className='flex items-center gap-x-3 w-full'>
+                <textarea
+                  onChange={(e) => setMessage(e.target.value)}
+                  value={message}
+                  rows={1}
+                  maxLength={2000}
+                  className="resize-none w-full max-h-[10rem] min-h-[2.5rem] outline-none rounded-md overflow-y-auto px-3 py-[0.6rem] bg-transparent text-white placeholder:text-gray-400 leading-tight"
+                  placeholder="Type a message"
+                />
 
-              {/* SEND BUTTON */}
-              <IoMdSend className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                {/* SEND BUTTON */}
+                <IoMdSend className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+              </div>
             </form>
           </div>
         </div>
