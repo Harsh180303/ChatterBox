@@ -29,6 +29,8 @@ const messageSchema = new Schema(
         'call',
         'reply',
         'forward',
+        'poll',
+        'event',
       ],
       default: 'text',
     },
