@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import EmojiPicker from 'emoji-picker-react';
 import { useDispatch, useSelector } from 'react-redux'
 import dp from '../src/assets/dp.png'
@@ -51,6 +51,8 @@ function ChatWindow() {
     },
   ]
 
+  const emojiRef = useRef(null)
+  const attachmentsRef = useRef(null)
   const { selectedChat } = useSelector((state) => state.chat)
   const dispatch = useDispatch()
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false)
@@ -61,6 +63,22 @@ function ChatWindow() {
   const handleAttachmentToggle = async () => {
     setIsAttachmentOpen((prev) => !prev)
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if(attachmentsRef.current && !attachmentsRef.current.contains(event.target)) {
+        setIsAttachmentOpen(false)
+      }
+      if(emojiRef.current && !emojiRef.current.contains(event.target)) {
+        setShowEmojiPicker(false)
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="hidden lg:flex w-full flex-1 h-full bg-[#2c2125]">
@@ -115,7 +133,9 @@ function ChatWindow() {
                   <FaPlus className="text-white" />
                 </div>
                 {isAttachmentOpen && (
-                  <div className="absolute bottom-[5rem] left-0 max-w-[22rem] bg-[#2f2f2f] px-2 py-2 rounded-md shadow-xl z-10">
+                  <div
+                    ref={attachmentsRef}
+                     className="absolute bottom-[5rem] left-0 max-w-[22rem] bg-[#2f2f2f] px-2 py-2 rounded-md shadow-xl z-10">
                     <div className="grid grid-cols-3 sm:grid-cols-3 gap-x-2 gap-y-2">
                       {attachments.map((item, index) => (
                         <div
@@ -136,7 +156,9 @@ function ChatWindow() {
                 <RiEmojiStickerFill className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" onClick={() => setShowEmojiPicker(prev => !prev)}/>
 
                 {showEmojiPicker && (
-                  <div className='absolute bottom-19 left-0 z-50'>
+                  <div 
+                    ref={emojiRef}
+                    className='absolute bottom-19 left-0 z-50' >
                     <EmojiPicker 
                       onEmojiClick={(emojiData) => setMessage(prev => prev + emojiData.emoji )}
                       theme='auto'
