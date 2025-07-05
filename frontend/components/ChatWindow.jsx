@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import EmojiPicker from 'emoji-picker-react';
 import { useDispatch, useSelector } from 'react-redux'
 import dp from '../src/assets/dp.png'
 import logo from '../src/assets/logo.png'
@@ -9,10 +10,11 @@ import { IoSearch, IoCloseSharp } from 'react-icons/io5'
 import { IoIosArrowRoundBack } from 'react-icons/io'
 import { clearSelectedChat } from '../src/redux/chatSlice'
 import { IoMdSend } from 'react-icons/io'
+import { MdMic } from 'react-icons/md'
 import { RiEmojiStickerFill } from 'react-icons/ri'
 import { FaPlus } from 'react-icons/fa6'
-import { BsCalendar2EventFill } from "react-icons/bs";
-import { FaPoll } from "react-icons/fa";
+import { BsCalendar2EventFill } from 'react-icons/bs'
+import { FaPoll } from 'react-icons/fa'
 import {
   FcDocument,
   FcOpenedFolder,
@@ -31,16 +33,29 @@ function ChatWindow() {
     { label: 'Image', type: 'image', image: <FcPicture /> },
     { label: 'Video', type: 'video', image: <FcVideoCall /> },
     { label: 'Audio', type: 'audio', image: <FcMusic /> },
-    { label: 'Location', type: 'location', image: <FaMapMarkerAlt className='text-[#CA4F00]'/> },
+    {
+      label: 'Location',
+      type: 'location',
+      image: <FaMapMarkerAlt className="text-[#CA4F00]" />,
+    },
     { label: 'Contact', type: 'contact', image: <FcContacts /> },
-    { label: 'Event', type: 'date', image: <BsCalendar2EventFill className='text-[#10545d]'/> },
-    { label: 'Poll', type: 'poll', image: <FaPoll className='text-[#204d96]'/> },
+    {
+      label: 'Event',
+      type: 'date',
+      image: <BsCalendar2EventFill className="text-[#10545d]" />,
+    },
+    {
+      label: 'Poll',
+      type: 'poll',
+      image: <FaPoll className="text-[#204d96]" />,
+    },
   ]
 
   const { selectedChat } = useSelector((state) => state.chat)
   const dispatch = useDispatch()
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false)
   console.log(selectedChat)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [message, setMessage] = useState('')
 
   const handleAttachmentToggle = async () => {
@@ -118,11 +133,25 @@ function ChatWindow() {
                 )}
 
                 {/* emoji */}
-                <RiEmojiStickerFill className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                <RiEmojiStickerFill className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" onClick={() => setShowEmojiPicker(prev => !prev)}/>
+
+                {showEmojiPicker && (
+                  <div className='absolute bottom-19 left-0 z-50'>
+                    <EmojiPicker 
+                      onEmojiClick={(emojiData) => setMessage(prev => prev + emojiData.emoji )}
+                      theme='auto'
+                      emojiStyle='native'
+                      lazyLoadEmojis="true"
+                      width={450}
+                      height={350}
+                      className='shadow-lg'
+                    />
+                  </div>
+                )}
               </div>
 
               {/* INPUT BOX */}
-              <div className='flex items-center gap-x-3 w-full'>
+              <div className="flex items-center gap-x-3 w-full">
                 <textarea
                   onChange={(e) => setMessage(e.target.value)}
                   value={message}
@@ -132,8 +161,12 @@ function ChatWindow() {
                   placeholder="Type a message"
                 />
 
-                {/* SEND BUTTON */}
-                <IoMdSend className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                {/* AUDIO / MESSAGE SEND BUTTON */}
+                {message === '' ? (
+                  <MdMic className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                ) : (
+                  <IoMdSend className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                )}
               </div>
             </form>
           </div>
