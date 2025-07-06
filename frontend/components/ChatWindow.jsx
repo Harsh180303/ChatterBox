@@ -26,6 +26,8 @@ import {
   FcContacts,
 } from 'react-icons/fc'
 import { FaMapMarkerAlt } from 'react-icons/fa'
+import SenderMessage from './SenderMessage';
+import ReceiverMessage from './ReceiverMessage';
 
 function ChatWindow() {
   const attachments = [
@@ -52,7 +54,9 @@ function ChatWindow() {
   ]
 
   const emojiRef = useRef(null)
+  const emojiIconRef = useRef(null)
   const attachmentsRef = useRef(null)
+  const attachmentsIconRef = useRef(null)
   const { selectedChat } = useSelector((state) => state.chat)
   const dispatch = useDispatch()
   const [isAttachmentOpen, setIsAttachmentOpen] = useState(false)
@@ -60,16 +64,16 @@ function ChatWindow() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [message, setMessage] = useState('')
 
-  const handleAttachmentToggle = async () => {
-    setIsAttachmentOpen((prev) => !prev)
-  }
-
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if(attachmentsRef.current && !attachmentsRef.current.contains(event.target)) {
+      if(attachmentsRef.current && !attachmentsRef.current.contains(event.target) &&
+        attachmentsIconRef.current && !attachmentsIconRef.current.contains(event.target)
+      ) {
         setIsAttachmentOpen(false)
       }
-      if(emojiRef.current && !emojiRef.current.contains(event.target)) {
+      if(emojiRef.current && !emojiRef.current.contains(event.target) &&
+        emojiIconRef.current && !emojiIconRef.current.contains(event.target)
+      ) {
         setShowEmojiPicker(false)
       }
     }
@@ -118,24 +122,34 @@ function ChatWindow() {
             </div>
           </div>
 
+          {/* MESSAGE AREA */}
+          <div className="h-full flex-1 overflow-y-auto pb-[10rem] px-4 pt-2">
+            <SenderMessage />
+            <ReceiverMessage />
+            <SenderMessage />
+            <ReceiverMessage />
+            <SenderMessage />
+          </div>
+
           {/* Bottom Most form */}
-          <div className="absolute bottom-1 shadow-2xl w-[99%] inset-x-0 mx-auto bg-[#161717] h-18 flex items-center px-8 py-4 rounded-lg ">
+          <div className="absolute bottom-0 shadow-2xl w-[99%] inset-x-0 mx-auto bg-[#161717] h-18 flex items-center px-8 py-4 rounded-lg ">
             <form className="flex gap-x-4 justify-between w-full">
               {/* ATTACHMENTS & EMOJIS */}
               <div className="flex gap-x-3 items-center">
                 {/* attachments */}
                 <div
+                  ref={attachmentsIconRef}
                   className={`p-2 bg-[#2f2f2f] rounded-full cursor-pointer transition-transform duration-300 ${
                     isAttachmentOpen ? 'rotate-[225deg]' : 'rotate-0'
                   }`}
-                  onClick={handleAttachmentToggle}
+                  onClick={(e) => {e.stopPropagation(), setIsAttachmentOpen((prev) => !prev)}}
                 >
                   <FaPlus className="text-white" />
                 </div>
                 {isAttachmentOpen && (
                   <div
                     ref={attachmentsRef}
-                     className="absolute bottom-[5rem] left-0 max-w-[22rem] bg-[#2f2f2f] px-2 py-2 rounded-md shadow-xl z-10">
+                     className="absolute bottom-18 left-0 max-w-[22rem] bg-[#2f2f2f] px-2 py-2 rounded-md shadow-xl z-10">
                     <div className="grid grid-cols-3 sm:grid-cols-3 gap-x-2 gap-y-2">
                       {attachments.map((item, index) => (
                         <div
@@ -153,12 +167,17 @@ function ChatWindow() {
                 )}
 
                 {/* emoji */}
-                <RiEmojiStickerFill className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" onClick={() => setShowEmojiPicker(prev => !prev)}/>
+                <div 
+                  ref={emojiIconRef}
+                  onClick={(e) => {e.stopPropagation(), setShowEmojiPicker(prev => !prev)}}
+                >
+                <RiEmojiStickerFill className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
+                </div>
 
                 {showEmojiPicker && (
                   <div 
                     ref={emojiRef}
-                    className='absolute bottom-19 left-0 z-50' >
+                    className='absolute bottom-18 left-0 z-50' >
                     <EmojiPicker 
                       onEmojiClick={(emojiData) => setMessage(prev => prev + emojiData.emoji )}
                       theme='auto'
