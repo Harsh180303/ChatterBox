@@ -23,3 +23,25 @@
 .focus-outline:focus-within {
   outline: auto;
 }
+
+/* ====== Hide scrollbar globally (but still scrollable) ====== */
+
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #444 transparent; /* Firefox */
+}
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #444;      /* Customize scrollbar thumb */
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: transparent; /* Or #2c2c2c for dark track */
+}
