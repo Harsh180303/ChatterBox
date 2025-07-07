@@ -9,6 +9,7 @@ import isAuth from './middlewares/isAuth.js'
 import userRoute from './routes/userRoute.js'
 import fs, { existsSync } from 'fs'
 import messageRouter from './routes/messageRoute.js'
+import chatRouter from './routes/chatRoute.js'
 
 await DbConnect()
 const app = express()
@@ -34,6 +35,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRoute)
 app.use('/api/user', userRoute)
 app.use('/api/message', messageRouter)
+app.use('/api/chat', chatRouter)
 
 app.get('/', (req, res) => {
   return res.send('Hello World')
