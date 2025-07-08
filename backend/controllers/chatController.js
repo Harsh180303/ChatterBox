@@ -37,3 +37,49 @@ export const getMyChats = async (req, res, next) => {
         })
     }
 }
+
+
+export const accessChat = async(req, res, next) => {
+    try {
+        const sender = req.userId
+        const receiver = req.params.userId
+
+        if(!receiver) {
+            return res.status(400).json({
+                success: false,
+                message: "Receiver is required"
+            })
+        }
+
+        let chat = await Chat.findOne({
+            isGroupChat: false,
+            participants: { $all: [sender, receiver], $size: 2}
+        })
+        .populate('participants', 'name userName image')
+
+        if(!chat) {
+            chat = await Chat.create({
+                participants: [sender, receiver],
+                createdBy: sender,
+            })
+        }
+
+        // populate after creation
+        chat = await Chat.findById(chat._id)
+        .populate('participants', 'name userName image')
+
+        return res.status(200).json({
+            success: true,
+            message: 'Chat created successfully',
+            chat,
+        })
+        
+    } catch (error) {
+        console.log('Error while accessing chat', error)
+        next({
+            statusCode: 500,
+            message: 'Failed to access chat',
+            error: error.message
+        })
+    }
+}
