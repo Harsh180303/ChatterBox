@@ -8,12 +8,14 @@ import { FaCommentDots } from "react-icons/fa"
 import ChatWindow from '../../components/ChatWindow'
 import { useDispatch } from 'react-redux'
 import { setSelectedChat } from '../redux/chatSlice'
+import { showLoader, hideLoader } from '../redux/loaderSlice'
 
 function SearchUsers() {
   const dispatch = useDispatch()
   const [results, setResults] = useState([])
   const [error, setError] = useState(null)
 
+  // useCallback - prevents infinite re-renders (infinit api calls)
   const handleSearch = useCallback(async (text) => {
     console.log('Searching...', text)
 
@@ -51,15 +53,31 @@ function SearchUsers() {
   }, [])
 
   const handleAccessChat = async (receiverId) => {
+
+    if (!receiverId || typeof receiverId !== 'string') {
+      console.warn('Invalid receiverId. API call skipped.')
+      return
+    }
+
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/access-chat/${receiverId}`, {}, {withCredentials: true})
+      dispatch(showLoader())
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/access-chat/${receiverId}`, {withCredentials: true}
+      )
 
       console.log('Response ', response)
-      const chat = response.data.chat
-      dispatch(setSelectedChat(chat))
-      setResults([]) // clear search
+
+      if(response?.data?.success && response.data.chat) {
+        const chat = response.data.chat
+        dispatch(setSelectedChat(chat))
+        setResults([]) // clear search
+      } else {
+        console.warn('Unexpected API response structure: ', response)
+      }
     } catch (error) {
-      console.log('Access chat error', error)
+      console.log('Access chat error', error?.response?.data?.message || error.message)
+    } finally {
+      dispatch(hideLoader())
     }
   }
   
@@ -101,12 +119,12 @@ function SearchUsers() {
                   </div>
 
                   {/* send-message button */}
-                  <div 
+                  <button 
                     onClick={() => handleAccessChat(user._id)}
                     className='flex items-center cursor-pointer'>
                     {/* <img src={chatBtn} width={30}/> */}
-                    < FaCommentDots className='h-5 w-5 hover:text-[#CA4F00] transition-all duration-300' />
-                  </div>
+                    < FaCommentDots aria-label='Chat' className='h-5 w-5 hover:text-[#CA4F00] transition-all duration-300' />
+                  </button>
                 </div>
               ))
             : error && <p className="text-sm text-red-400 mt-2">{error}</p>}
