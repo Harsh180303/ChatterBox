@@ -1,6 +1,6 @@
 import express from "express"
-import isAuth from "../middlewares/isAuth"
-import { getMyChats } from "../controllers/chatController"
+import isAuth from "../middlewares/isAuth.js"
+import { getMyChats } from "../controllers/chatController.js"
 
 const chatRouter = express.Router()
 
