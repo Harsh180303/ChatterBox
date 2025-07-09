@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import SideBar from '../../components/SideBar'
 import SearchBox from '../../components/SearchBox'
 import axios from 'axios'
@@ -11,6 +11,7 @@ import { setSelectedChat } from '../redux/chatSlice'
 import { showLoader, hideLoader } from '../redux/loaderSlice'
 
 function SearchUsers() {
+  const wrapperRef = useRef(null)
   const dispatch = useDispatch()
   const [results, setResults] = useState([])
   const [error, setError] = useState(null)
@@ -62,11 +63,11 @@ function SearchUsers() {
     try {
       dispatch(showLoader())
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/access-chat/${receiverId}`, {withCredentials: true}
+        `${import.meta.env.VITE_API_BASE_URL}/chat/access-chat/${receiverId}`, {withCredentials: true}
       )
 
       console.log('Response ', response)
-
+      
       if(response?.data?.success && response.data.chat) {
         const chat = response.data.chat
         dispatch(setSelectedChat(chat))
@@ -89,12 +90,16 @@ function SearchUsers() {
       </div>
 
       {/* Search Area */}
-      <div className="w-[30%] h-full bg-[#2c2125] p-4 flex flex-col border-x border-white/5 text-white">
+      <div 
+        ref={wrapperRef}
+        className="w-[30%] h-full bg-[#2c2125] p-4 flex flex-col border-x border-white/5 text-white"
+      >
         <SearchBox
           onSearch={handleSearch}
           onClose={() => {
             setResults([]), setError(null)
           }}
+          wrapperRef={wrapperRef}  // pass to the child
         />
 
         {/* Result list */}
@@ -120,8 +125,9 @@ function SearchUsers() {
 
                   {/* send-message button */}
                   <button 
-                    onClick={() => handleAccessChat(user._id)}
-                    className='flex items-center cursor-pointer'>
+                    onClick={() => {handleAccessChat(user._id)}}
+                    className='flex items-center cursor-pointer w-fit h-full'
+                  >
                     {/* <img src={chatBtn} width={30}/> */}
                     < FaCommentDots aria-label='Chat' className='h-5 w-5 hover:text-[#CA4F00] transition-all duration-300' />
                   </button>
@@ -132,7 +138,7 @@ function SearchUsers() {
       </div>
 
       {/* Message Area */}
-      <div className="text-white flex-1 p-6"><ChatWindow /></div>
+      <div className="text-white flex-1"><ChatWindow /></div>
     </div>
   )
 }

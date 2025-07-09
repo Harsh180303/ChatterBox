@@ -10,9 +10,10 @@ const SearchBox = ({
   placeholder = 'Search...',
   autoFocus = true,
   onClose,
+  wrapperRef,
 }) => {
   const inputRef = useRef(null)
-  const wrapperRef = useRef(null)
+  // const wrapperRef = useRef(null)
   const [value, setValue] = useState('')
   const debouncedValue = useDebouncedInput(value, 500)
 
@@ -40,7 +41,7 @@ const SearchBox = ({
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [onClose])
+  }, [onClose, wrapperRef])
   return (
     <form
       ref={wrapperRef}
