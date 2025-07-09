@@ -54,6 +54,8 @@ function ChatWindow() {
     },
   ]
 
+  const { _id: currentUserId } = useSelector((state) => state.user.userData.user)
+  console.log("current user's id: ", currentUserId)
   const emojiRef = useRef(null)
   const emojiIconRef = useRef(null)
   const attachmentsRef = useRef(null)
@@ -151,6 +153,10 @@ function ChatWindow() {
     }
   }
 
+  const receiverUser = selectedChat?.participants?.find(
+    (p) => p._id !== currentUserId
+  )
+
   return (
     <div className="hidden lg:flex w-full flex-1 h-full bg-[#2c2125]">
       {selectedChat ? (
@@ -164,14 +170,14 @@ function ChatWindow() {
               />
 
               <img
-                src={selectedChat?.image || dp}
+                src={receiverUser?.image || dp}
                 alt="Profile picture"
                 className="h-11 w-11 rounded-full cursor-pointer overflow-hidden bg-white"
               />
 
               <div className="flex flex-col items-start">
                 <h1 className="font-bold text-xl tracking-wide">
-                  {selectedChat?.name || selectedChat?.userName}
+                  {receiverUser?.name || receiverUser?.userName}
                 </h1>
 
                 <p className="text-sm">
