@@ -138,7 +138,7 @@ function ChatWindow() {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/message/send/${selectedChat._id}`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/message/send/${receiverUser._id}`, formData, {
         // headers: {
         //   'Content-Type': 'multipart/form-data',
         // },

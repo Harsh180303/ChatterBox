@@ -37,11 +37,19 @@ export const sendMessage = async (req, res, next) => {
 
     // if chat doesn't exist, create it
     if (!chat) {
+      const settings = [sender, receiver].map((user) => ({
+        user,
+        isMuted: false,
+        isPinned: false,
+        isArchived: false,
+        unreadCount: 0,
+      }))
       chat = await Chat.create(
         [
           {
             participants: [sender, receiver],
             createdBy: sender,
+            settings,
           },
         ],
         { session }
@@ -50,7 +58,7 @@ export const sendMessage = async (req, res, next) => {
     }
 
     // create the message
-    const newMessage = await Message.create(
+    const [ newMessage ] = await Message.create(
       [
         {
           sender,

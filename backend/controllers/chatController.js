@@ -11,6 +11,7 @@ export const getMyChats = async (req, res, next) => {
             participants: userId
         })
         .populate('participants', 'name userName image')
+        .populate('settings.user', 'name userName image')
         .populate({
             path: 'lastMessage',
             populate: {
@@ -21,7 +22,6 @@ export const getMyChats = async (req, res, next) => {
         .sort({ updatedAt: -1})
         .skip((page - 1) * limit)
         .limit(limit)
-        .lean()
 
         return res.status(200).json({
             success: true,
@@ -56,17 +56,29 @@ export const accessChat = async(req, res, next) => {
             participants: { $all: [sender, receiver], $size: 2}
         })
         .populate('participants', 'name userName image')
+        if (!chat) {
+          const settings = [sender, receiver].map((user) => ({
+            user,
+            isMuted: false,
+            isPinned: false,
+            isArchived: false,
+            unreadCount: 0,
+          }))
 
-        if(!chat) {
-            chat = await Chat.create({
-                participants: [sender, receiver],
-                createdBy: sender,
-            })
+          chat = await Chat.create({
+            participants: [sender, receiver],
+            createdBy: sender,
+            settings,
+          })
         }
+
+        await chat.save()
 
         // populate after creation
         chat = await Chat.findById(chat._id)
         .populate('participants', 'name userName image')
+        .populate('settings.user', 'name userName image')
+
 
         return res.status(200).json({
             success: true,

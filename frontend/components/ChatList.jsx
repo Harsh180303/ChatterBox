@@ -43,11 +43,11 @@ const ChatList = () => {
   }, [])
 
   const getOtherUser = (chat, currentUserId) => {
-    return chat.participants.find(p => p.id !== currentUserId)
+    return chat?.participants.find(p => p._id.toString() !== currentUserId)
   }
 
   const getUserSettings = (chat, currentUserId) => {
-    return chat.settings.find(s => s.user === currentUserId)
+    return chat?.settings.find(s => s.user === currentUserId)
   }
 
   return (
@@ -80,7 +80,7 @@ const ChatList = () => {
             {/* Left side: Avatar + Info */}
             <div className="flex items-center w-[75%] overflow-hidden">
               <img
-                src={otherUser.image || dp}
+                src={otherUser?.image || dp}
                 alt="Profile"
                 draggable="false"
                 className="h-14 w-14 object-cover rounded-full bg-white shrink-0"
@@ -88,7 +88,7 @@ const ChatList = () => {
 
               <div className="ml-4 flex flex-col justify-center items-start overflow-hidden">
                 <h1 className="font-semibold text-lg tracking-wide text-white truncate max-w-full">
-                  {otherUser.name || otherUser.userName}
+                  {otherUser?.name || otherUser?.userName}
                 </h1>
                 <p className="text-sm text-white/70 truncate max-w-full">
                   {chat.lastMessage?.content || 'No message yet'}
@@ -105,10 +105,10 @@ const ChatList = () => {
               )}
               <div className="flex gap-x-1 items-center">
                 {settings?.isMuted && <FaBellSlash className="w-5 h-5 text-[#004065]" />}
-                {settings.isPinned && <RiPushpin2Fill className="w-5 h-5 text-[#004065]" />}
-                {settings.unreadCount > 0 && (
+                {settings?.isPinned && <RiPushpin2Fill className="w-5 h-5 text-[#004065]" />}
+                {settings?.unreadCount > 0 && (
                   <span className="p-1 font-medium bg-[#CA4F00] text-black rounded-full min-w-6 h-6 flex justify-center items-center text-xs">
-                    {settings.unreadCount > 9 ? '9+' : settings.unreadCount}
+                    {settings?.unreadCount > 9 ? '9+' : settings?.unreadCount}
                   </span>
                 )}
               </div>

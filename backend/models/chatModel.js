@@ -16,8 +16,8 @@ const chatSchema = new Schema(
     ],
 
     maxParticipants: {
-        type: Number,
-        default: 256,
+      type: Number,
+      default: 256,
     },
 
     // Group chat details (optional for one-to-one)
@@ -41,7 +41,11 @@ const chatSchema = new Schema(
     // Per-user settings (mute, pin, archived)
     settings: [
       {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
         isMuted: { type: Boolean, default: false },
         isPinned: { type: Boolean, default: false },
         isArchived: { type: Boolean, default: false },
@@ -77,7 +81,7 @@ const chatSchema = new Schema(
     inviteLink: {
       type: String,
       unique: true,
-      sparse: true
+      sparse: true,
     },
   },
   { timestamps: true }
