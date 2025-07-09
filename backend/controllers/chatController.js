@@ -42,7 +42,7 @@ export const getMyChats = async (req, res, next) => {
 export const accessChat = async(req, res, next) => {
     try {
         const sender = req.userId
-        const receiver = req.params.userId
+        const receiver = req.params.receiverId
 
         if(!receiver) {
             return res.status(400).json({
@@ -58,14 +58,14 @@ export const accessChat = async(req, res, next) => {
         .populate('participants', 'name userName image')
 
         if(!chat) {
-            const createdChat = await Chat.create({
+            chat = await Chat.create({
                 participants: [sender, receiver],
                 createdBy: sender,
             })
         }
 
         // populate after creation
-        chat = await Chat.findById(createdChat._id)
+        chat = await Chat.findById(chat._id)
         .populate('participants', 'name userName image')
 
         return res.status(200).json({
