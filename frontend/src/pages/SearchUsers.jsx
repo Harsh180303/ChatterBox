@@ -5,7 +5,7 @@ import axios from 'axios'
 import dp from '../assets/dp.png'
 import chatBtn from '../assets/logo.png'
 import { FaCommentDots } from "react-icons/fa"
-import ChatWindow from '../../components/ChatWindow'
+import ChatWindow from '../../components/ChatWindow/ChatWindow'
 import { useDispatch } from 'react-redux'
 import { setSelectedChat } from '../redux/chatSlice'
 import { showLoader, hideLoader } from '../redux/loaderSlice'

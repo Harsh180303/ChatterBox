@@ -1,7 +1,8 @@
 import React from 'react'
 import SideBar from '../../components/SideBar'
 import ChatList from '../../components/ChatList'
-import ChatWindow from '../../components/ChatWindow'
+// import ChatWindow from '../../components/ChatWindow'
+import ChatWindow from '../../components/ChatWindow/ChatWindow'
 
 function Home() {
   return (
