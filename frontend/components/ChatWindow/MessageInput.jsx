@@ -5,6 +5,7 @@ import { FaPlus } from 'react-icons/fa6'
 import { useEffect, useRef, useState } from 'react'
 import EmojiPicker from 'emoji-picker-react'
 import axios from 'axios'
+import MediaPreview from './MediaPreview'
 
 const MessageInput = ({
   attachments,
@@ -208,7 +209,7 @@ const MessageInput = ({
           />
 
           {/* AUDIO / MESSAGE SEND BUTTON */}
-          {message === '' ? (
+          {( message === '' && !mediaFile ) ? (
             <MdMic className="h-6 w-6 cursor-pointer hover:text-[#CA4F00]" />
           ) : (
             <IoMdSend
@@ -218,6 +219,8 @@ const MessageInput = ({
           )}
         </div>
       </form>
+
+      {mediaFile && <MediaPreview />}
     </div>
   )
 }

@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-// import dp from '../src/assets/dp.png'
 import logo from '../../src/assets/logo.png'
-
 import { BsCalendar2EventFill } from 'react-icons/bs'
 import { FaPoll } from 'react-icons/fa'
 import {
@@ -18,7 +16,8 @@ import SenderMessage from '../SenderMessage'
 import ReceiverMessage from '../ReceiverMessage'
 import ChatHeader from './ChatHeader'
 import MessageInput from './MessageInput'
-import MediaPreview from './MediaPreview'
+import getMediaType from '../../src/utils/getMediaType'
+import useMessages from '../../src/customHooks/useMessages'
 
 function ChatWindow() {
   const attachments = [
@@ -48,18 +47,15 @@ function ChatWindow() {
     (state) => state.user.userData.user
   )
   console.log("current user's id: ", currentUserId)
+  
   const { selectedChat } = useSelector((state) => state.chat)
-  console.log(selectedChat)
+
+  const receiverUser = selectedChat?.participants?.find(
+    (p) => p._id !== currentUserId
+  )
+  console.log("SELECTED CHAT",selectedChat)
   const [message, setMessage] = useState('')
   const [mediaFile, setMediaFile] = useState(null)
-
-  const getMediaType = (file) => {
-    const type = file.type
-    if (type.startsWith('image/')) return 'image'
-    if (type.startsWith('video/')) return 'video'
-    if (type.startsWith('audio/')) return 'audio'
-    return 'file'
-  }
 
   const handleSendMessage = async () => {
     if (!message.trim() && !mediaFile) return
@@ -91,9 +87,13 @@ function ChatWindow() {
     }
   }
 
-  const receiverUser = selectedChat?.participants?.find(
-    (p) => p._id !== currentUserId
-  )
+  const {
+    messages,
+    loading,
+    hasMore,
+    fetchMessages,
+    sendMessage,
+  } = useMessages(selectedChat?._id, receiverUser)
 
   return (
     <div className="hidden lg:flex w-full flex-1 h-full bg-[#2c2125]">
@@ -103,11 +103,14 @@ function ChatWindow() {
 
           {/* MESSAGE AREA */}
           <div className="h-full flex-1 overflow-y-auto space-y-3 pb-[10rem] px-4 pt-2">
-            {/* <SenderMessage />
-            <ReceiverMessage />
-            <SenderMessage />
-            <ReceiverMessage />
-            <SenderMessage /> */}
+            {messages.map((msg) => {
+              return msg.sender._id === currentUserId ?
+              <SenderMessage key={msg._id} msg={msg}/>
+              : <ReceiverMessage key={msg._id} msg={msg}/>
+            })}
+
+            {loading && <p className='text-sm text-white/50'>Loading...</p>}
+            
           </div>
 
           {/* Bottom Most form */}
@@ -120,7 +123,6 @@ function ChatWindow() {
             onSendMessage={handleSendMessage}
           />
 
-          <MediaPreview />
         </div>
       ) : (
         <div className="relative flex w-full h-full justify-center items-center text-balance flex-col gap-y-1">

@@ -2,7 +2,7 @@ import React from 'react'
 
 function MediaPreview() {
   return (
-    <div>MediaPreview</div>
+    <div className='absolute bottom-19'>MediaPreview</div>
   )
 }
 
