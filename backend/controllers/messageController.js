@@ -13,6 +13,10 @@ export const sendMessage = async (req, res, next) => {
     const { content, messageType } = req.body
     let media = null
 
+    console.log("req.file: ", req.file)
+    console.log("req.body: ", req.body)
+    
+    
     if (messageType === 'text' && !content) {
       return res.status(400).json({
         success: false,
@@ -22,10 +26,21 @@ export const sendMessage = async (req, res, next) => {
 
     // upload media if present (image, file, video)
     if (req.file) {
+      try {
       const uploaded = await uploadOnCloudinary(req.file.path)
-      media = {
-        url: uploaded.secure_url,
-        public_id: uploaded.public_id,
+      console.log("uploaded from cloudinary:", uploaded)
+
+        if (uploaded && uploaded.url && uploaded.public_id) {
+          media = {
+            url: uploaded.url,
+            public_id: uploaded.public_id,
+          }
+          console.log("media object formed:", media)
+        } else {
+          console.log("Upload failed or returned incomplete object.")
+        }
+      } catch (error) {
+        console.log("Cloudinary Upload Failed ", error)
       }
     }
 
@@ -58,17 +73,19 @@ export const sendMessage = async (req, res, next) => {
     }
 
     // create the message
+    const messagePayload = {
+      sender,
+      receiver,
+      chat: chat._id,
+      messageType,
+    }
+
+    if (content) messagePayload.content = content
+    if (media?.url) messagePayload.media = media
+    console.log("Media added to payload:", messagePayload.media)
+    
     const [ newMessage ] = await Message.create(
-      [
-        {
-          sender,
-          receiver,
-          chat: chat._id,
-          messageType,
-          content,
-          media,
-        },
-      ],
+      [ messagePayload],
       { session }
     )
 

@@ -11,7 +11,10 @@ const uploadOnCloudinary = async (filePath) => {
     let uploadResult = null
     try {
         uploadResult = await cloudinary.uploader.upload(filePath, {resource_type: 'auto'})
-        return uploadResult.secure_url
+        return {
+            url: uploadResult.secure_url,
+            public_id: uploadResult.public_id,
+        }
     } catch (uploadErr) {
         console.log("Upload failed ", uploadErr)
         return null
