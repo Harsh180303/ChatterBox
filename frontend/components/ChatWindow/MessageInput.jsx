@@ -220,7 +220,7 @@ const MessageInput = ({
         </div>
       </form>
 
-      {mediaFile && <MediaPreview />}
+      {mediaFile && <MediaPreview mediaFile={mediaFile} onClear={() => setMediaFile(null)}/>}
     </div>
   )
 }
