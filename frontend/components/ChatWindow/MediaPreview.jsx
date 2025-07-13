@@ -25,6 +25,31 @@ function MediaPreview({mediaFile, onClear}) {
           />
         )
       }
+
+      {
+        type.startsWith('video/') && (
+          <video controls src={fileURL}
+            className='max-w-[13rem] flex justify-center rounded-md mt-1'
+          />
+        )
+      }
+
+      {
+        type.startsWith('audio/') && (
+          <audio controls src={fileURL}
+            className='max-w-[13rem] flex justify-center rounded-md mt-1'
+          />
+        )
+      }
+
+      {
+        !type.startsWith('image/') &&
+        !type.startsWith('video/') &&
+        !type.startsWith('audio/') && (
+          <p className='text-white text-sm'>{mediaFile.name}</p>
+        )
+      }
+      
     </div>
   )
 }
