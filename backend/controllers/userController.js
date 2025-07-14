@@ -44,7 +44,7 @@ export const editProfile = async (req, res, next) => {
     const updateData = {}
     if (name) updateData.name = name
     if (about) updateData.about = about
-    if (image) updateData.image = image
+    if (image) updateData.image = image.url
 
     const user = await User.findByIdAndUpdate(
       req.userId,
