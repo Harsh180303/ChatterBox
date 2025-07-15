@@ -10,9 +10,9 @@ import userRoute from './routes/userRoute.js'
 import fs, { existsSync } from 'fs'
 import messageRouter from './routes/messageRoute.js'
 import chatRouter from './routes/chatRoute.js'
+import { app, server } from './socket/socket.js'
 
 await DbConnect()
-const app = express()
 const uploadPath = './uploads'
 
 if(!existsSync(uploadPath)) {
@@ -45,6 +45,6 @@ app.get('/', (req, res) => {
 
 app.use(errorMiddleware)
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`)
 })
