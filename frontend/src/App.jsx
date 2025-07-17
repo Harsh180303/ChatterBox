@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux'
 import Profile from './pages/Profile'
 import Home from './pages/Home'
 import SearchUsers from './pages/SearchUsers'
+import { useEffect } from 'react'
+import { io } from 'socket.io-client'
 
 function App() {
   useCurrentUser()
@@ -19,6 +21,10 @@ function App() {
   if (userLoading) {
     return <Loader />
   }
+
+  useEffect(() => {
+    const socket = io(`${import.meta.env.SOCKET_URL}`)
+  }, [])
   
   return (
     <>
