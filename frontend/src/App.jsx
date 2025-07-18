@@ -17,14 +17,19 @@ function App() {
   useCurrentUser()
   const { loading } = useSelector((state) => state.loader)
   const { userData, userLoading } = useSelector((state) => state.user)
+  
+  useEffect(() => {
+    const socket = io(`${import.meta.env.VITE_SOCKET_URL}`)
+
+    socket.on('hello', (msg) => {
+      console.log(msg)
+    })
+    
+  }, [])
 
   if (userLoading) {
     return <Loader />
   }
-
-  useEffect(() => {
-    const socket = io(`${import.meta.env.SOCKET_URL}`)
-  }, [])
   
   return (
     <>
